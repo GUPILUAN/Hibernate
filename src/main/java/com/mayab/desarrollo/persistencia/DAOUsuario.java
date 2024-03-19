@@ -57,8 +57,8 @@ public class DAOUsuario implements IDAOUsuario{
     @Override
     public boolean borrarUsuario(int id) {
         Session session = HibernateUtil.getSessionFactory().openSession();
-        session.beginTransaction();
         Usuario usuarioBorrar = this.consultarUsuario(id);
+        session.beginTransaction();
         if(usuarioBorrar != null){
             session.delete(usuarioBorrar);
             session.getTransaction().commit(); 
@@ -75,7 +75,6 @@ public class DAOUsuario implements IDAOUsuario{
 
     @Override
     public List<Usuario> listarTodosLosUsuarios() {
-       
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         List<Usuario> todosUsuarios = session.createNativeQuery("SELECT * FROM Usuarios ORDER BY id", Usuario.class).getResultList();
@@ -92,7 +91,6 @@ public class DAOUsuario implements IDAOUsuario{
                 return user;
             }
         }
-
         return null;
     }
 
