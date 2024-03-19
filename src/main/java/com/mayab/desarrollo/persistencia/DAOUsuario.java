@@ -62,12 +62,6 @@ public class DAOUsuario implements IDAOUsuario{
         if(usuarioBorrar != null){
             session.delete(usuarioBorrar);
             session.getTransaction().commit(); 
-            if(this.listarTodosLosUsuarios().isEmpty()){
-                session.beginTransaction(); 
-                session.createNativeQuery("UPDATE hibernate_sequence SET next_val = 1").executeUpdate();
-                System.out.println("Se quedó vacia");
-                session.getTransaction().commit();
-            }
             session.close();
             return true;
         } else {
@@ -106,7 +100,7 @@ public class DAOUsuario implements IDAOUsuario{
     public int obtenerHueco() {
         int hueco = 0;
         List<Usuario> usuarios = listarTodosLosUsuarios();
-        int maxId = usuarios.getLast().getId();
+        int maxId = usuarios.size() > 0 ? usuarios.getLast().getId() : 0;
         if(usuarios.size() != maxId){
             for (Usuario user : usuarios) {
                 hueco++;
