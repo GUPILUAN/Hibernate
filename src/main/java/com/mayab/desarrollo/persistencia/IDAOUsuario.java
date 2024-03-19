@@ -10,4 +10,5 @@ public interface IDAOUsuario {
     public boolean borrarUsuario(int id);
     public List<Usuario> listarTodosLosUsuarios();
     public Usuario validarUsuario(String usuario, String email);
+    public int obtenerHueco();
 }

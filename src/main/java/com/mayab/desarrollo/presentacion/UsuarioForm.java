@@ -93,8 +93,13 @@ public class UsuarioForm extends  JFrame implements ActionListener{
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == botonCreate){
-                int id = c.crearUsuario(nombreText.getText(), contrasenaText.getText(), emailText.getText());
-                String mensaje = id > 0 ? "Se ha creado con exito el usuario, su ID es: " + id + (contrasenaText.getText().isBlank()? " se creó password predeterminado (se recomienda cambiar)": ""): "No se pudo crear el usuario";
+                String mensaje;
+                if(nombreText.getText().isEmpty() || emailText.getText().isEmpty()){
+                    mensaje = "Por lo menos los campos email y nombre deben estar rellenos, intenta nuevamente";
+                }else{
+                    int id = c.crearUsuario(nombreText.getText(), contrasenaText.getText(), emailText.getText());
+                    mensaje = id > 0 ? "Se ha creado con exito el usuario, su ID es: " + id + (contrasenaText.getText().isBlank()? " se creó password predeterminado (se recomienda cambiar)": ""): "No se pudo crear el usuario";
+                }
                 etiquetaResultado.setText(mensaje);
 
             }else if(e.getSource() == botonRead){
@@ -140,7 +145,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 String mensaje;
                 try {
                     int id= Integer.parseInt((String)idText.getText().trim());
-                    mensaje =  c.eliminarUsuario(id) ? "Se ha eliminado con exito el usuario con ID: " + id : "No existe el usuario con ese ID";
+                    mensaje =  c.eliminarUsuario(id) ? "Se ha eliminado con exito el usuario con ID: " + id : "No se elimino ningun usuario, quizá no existe el usuario con ese ID";
                 } catch (Exception event) {
                     mensaje = "Error al leer id, asegurate de poner un numero entero en el campo id";
                 }
@@ -150,8 +155,8 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 JFrame frame = new JFrame();
                 JTextArea textArea = new JTextArea(10,30);
 
-                c.obtenerUsuarios().forEach(libro -> textArea.append(libro.toString()+"\n"));
- 
+                c.obtenerUsuarios().forEach(user -> textArea.append(user.toString() + "\n" ));
+        
                 textArea.setEditable(false);
                 JScrollPane scrollPane = new JScrollPane(textArea);
                 
