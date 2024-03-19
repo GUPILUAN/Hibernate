@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import com.mayab.desarrollo.entities.Usuario;
 import com.mayab.desarrollo.logica.ControllerUsuario;
 import com.mayab.desarrollo.persistencia.DAOUsuario;
+
 public class UsuarioForm extends  JFrame implements ActionListener{
      private JButton botonCreate, botonRead, botonUpdate, botonDelete,botonBorrarVarios , botonObtenerAll;
         private JTextField idText, nombreText, contrasenaText, emailText;
@@ -98,7 +99,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                     mensaje = "Por lo menos los campos email y nombre deben estar rellenos, intenta nuevamente";
                 }else{
                     int id = c.crearUsuario(nombreText.getText(), contrasenaText.getText(), emailText.getText());
-                    mensaje = id > 0 ? "Se ha creado con exito el usuario, su ID es: " + id + (contrasenaText.getText().isBlank()? " se creó password predeterminado (se recomienda cambiar)": ""): "No se pudo crear el usuario";
+                    mensaje = id > 0 ? "Se ha creado con exito el usuario, su ID es: " + id + (contrasenaText.getText().isBlank()? ", se creó password predeterminado (se recomienda cambiar)": ""): "No se pudo crear el usuario";
                 }
                 etiquetaResultado.setText(mensaje);
 

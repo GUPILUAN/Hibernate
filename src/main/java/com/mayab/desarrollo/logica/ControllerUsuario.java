@@ -19,7 +19,7 @@ public class ControllerUsuario {
             user.setEmail(email);
             return dao.insertarUsuario(user);
         }
-        System.out.println("Ya se encuentra el usuario en la base de Datos");
+        System.out.println("Ya se encuentra el usuario en la base de datos");
         return -1;
     }
 

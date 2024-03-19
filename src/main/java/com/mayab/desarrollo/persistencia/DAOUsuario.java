@@ -10,9 +10,9 @@ public class DAOUsuario implements IDAOUsuario{
         
     @Override
     public int insertarUsuario(Usuario usuario) {
+        int hueco = this.obtenerHueco();
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        int hueco = this.obtenerHueco();
         session.createNativeQuery(String.format("UPDATE hibernate_sequence SET next_val = %d" , hueco)).executeUpdate();
         int id = (int)session.save(usuario);
         session.getTransaction().commit();
@@ -56,10 +56,11 @@ public class DAOUsuario implements IDAOUsuario{
 
     @Override
     public boolean borrarUsuario(int id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
         Usuario usuarioBorrar = this.consultarUsuario(id);
+        Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         if(usuarioBorrar != null){
+
             session.delete(usuarioBorrar);
             session.getTransaction().commit(); 
             session.close();
@@ -77,28 +78,29 @@ public class DAOUsuario implements IDAOUsuario{
     public List<Usuario> listarTodosLosUsuarios() {
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
-        List<Usuario> todosUsuarios = session.createNativeQuery("SELECT * FROM Usuarios ORDER BY id", Usuario.class).getResultList();
+        List<Usuario> todosUsuarios = session.createQuery("FROM Usuario ORDER BY id", Usuario.class).getResultList();
         session.getTransaction().commit();
-        session.close();
+        
         return todosUsuarios;
     }
 
     @Override
     public Usuario validarUsuario(String usuario, String email) {
-        List<Usuario> usuarios = listarTodosLosUsuarios();
-        for (Usuario user : usuarios) {
-            if(user.getNombre().equals(usuario) || user.getEmail().equals(email) ){
-                return user;
-            }
-        }
-        return null;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        session.beginTransaction();
+        Usuario user = session.createQuery("FROM Usuario WHERE nombre = :usuario OR email = :email", Usuario.class)
+                                .setParameter("usuario", usuario)
+                                .setParameter("email", email)
+                                .uniqueResult();
+        session.close();
+        return user;
     }
 
     @Override
     public int obtenerHueco() {
         int hueco = 0;
         List<Usuario> usuarios = listarTodosLosUsuarios();
-        int maxId = usuarios.size() > 0 ? usuarios.getLast().getId() : 0;
+        int maxId = usuarios.isEmpty() ?  0 : usuarios.getLast().getId();
         if(usuarios.size() != maxId){
             for (Usuario user : usuarios) {
                 hueco++;
