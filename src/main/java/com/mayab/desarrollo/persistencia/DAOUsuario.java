@@ -101,7 +101,7 @@ public class DAOUsuario implements IDAOUsuario{
         int hueco = 0;
         List<Usuario> usuarios = listarTodosLosUsuarios();
         int maxId = usuarios.isEmpty() ?  0 : usuarios.getLast().getId();
-        if(usuarios.size() != maxId){
+        if(maxId != 0 && usuarios.size() != maxId){
             for (Usuario user : usuarios) {
                 hueco++;
                 if(user.getId() != hueco){
