@@ -14,18 +14,18 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.mayab.desarrollo.entities.Usuario;
-import com.mayab.desarrollo.logica.ControllerUsuario;
 import com.mayab.desarrollo.persistencia.DAOUsuario;
+import com.mayab.desarrollo.services.UserServices;
 
 public class UsuarioForm extends  JFrame implements ActionListener{
      private JButton botonCreate, botonRead, botonUpdate, botonDelete,botonBorrarVarios , botonObtenerAll;
         private JTextField idText, nombreText, contrasenaText, emailText;
         private JLabel etiquetaID, etiquetaNombre,etiquetaContrasena,etiquetaEmail, etiquetaResultado;
-        private ControllerUsuario c;
+        private UserServices servicio;
         
         public UsuarioForm(){
             super("ADMINISTRADOR DE USUARIOS");
-            this.c = new ControllerUsuario(new DAOUsuario());
+            this.servicio = new UserServices(new DAOUsuario());
             this.botonCreate = new JButton("Crear usuario");
             this.botonRead = new JButton("Buscar");
             this.botonUpdate = new JButton("Actualizar");
@@ -98,7 +98,8 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 if(nombreText.getText().isEmpty() || emailText.getText().isEmpty()){
                     mensaje = "Por lo menos los campos email y nombre deben estar rellenos, intenta nuevamente";
                 }else{
-                    int id = c.crearUsuario(nombreText.getText(), contrasenaText.getText(), emailText.getText());
+                    Usuario usuarioCreado = servicio.crearUsuario(nombreText.getText(), contrasenaText.getText(), emailText.getText());
+                    int id = usuarioCreado == null ? -1 : usuarioCreado.getId();
                     mensaje = id > 0 ? "Se ha creado con exito el usuario, su ID es: " + id + (contrasenaText.getText().isBlank()? ", se creó password predeterminado (se recomienda cambiar)": ""): "No se pudo crear el usuario";
                 }
                 etiquetaResultado.setText(mensaje);
@@ -108,7 +109,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 String mensaje;
                 try {
                     int id= Integer.parseInt((String)idText.getText().trim());
-                    user = c.obtenerUsuario(id);
+                    user = servicio.obtenerUsuario(id);
                     mensaje = user != null ? String.format("Se ha encontrado con exito el usuario con ID: %d Nombre: %s Email: %s", user.getId(), user.getNombre(),user.getEmail()): "No existe usuario con ese ID";
                 } catch (Exception event) {
                     mensaje = "Error al leer id, asegurate de poner un numero entero en el campo id";
@@ -123,7 +124,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                          id= Integer.parseInt((String)idText.getText().trim());
                     }
                     
-                    mensaje = c.actualizaUsuario(
+                    mensaje = servicio.actualizaUsuario(
                         id, 
                         nombreText.getText(), 
                         contrasenaText.getText(), 
@@ -146,7 +147,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 String mensaje;
                 try {
                     int id= Integer.parseInt((String)idText.getText().trim());
-                    mensaje =  c.eliminarUsuario(id) ? "Se ha eliminado con exito el usuario con ID: " + id : "No se elimino ningun usuario, quizá no existe el usuario con ese ID";
+                    mensaje =  servicio.eliminarUsuario(id) ? "Se ha eliminado con exito el usuario con ID: " + id : "No se elimino ningun usuario, quizá no existe el usuario con ese ID";
                 } catch (Exception event) {
                     mensaje = "Error al leer id, asegurate de poner un numero entero en el campo id";
                 }
@@ -156,7 +157,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
                 JFrame frame = new JFrame();
                 JTextArea textArea = new JTextArea(10,30);
 
-                c.obtenerUsuarios().forEach(user -> textArea.append(user.toString() + "\n" ));
+                servicio.obtenerUsuarios().forEach(user -> textArea.append(user.toString() + "\n" ));
         
                 textArea.setEditable(false);
                 JScrollPane scrollPane = new JScrollPane(textArea);
@@ -169,7 +170,7 @@ public class UsuarioForm extends  JFrame implements ActionListener{
 
             else if(e.getSource() == botonBorrarVarios){
                 String ids = idText.getText();
-                c.borrarMuchosUsuarios(ids);
+                servicio.borrarMuchosUsuarios(ids);
             }
         }
 }

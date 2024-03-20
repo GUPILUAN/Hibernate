@@ -60,7 +60,6 @@ public class DAOUsuario implements IDAOUsuario{
         Session session = HibernateUtil.getSessionFactory().openSession();
         session.beginTransaction();
         if(usuarioBorrar != null){
-
             session.delete(usuarioBorrar);
             session.getTransaction().commit(); 
             session.close();

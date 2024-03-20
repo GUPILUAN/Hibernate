@@ -1,4 +1,4 @@
-package com.mayab.desarrollo.logica;
+package com.mayab.desarrollo.controllers;
 import java.util.List;
 
 import com.mayab.desarrollo.entities.Usuario;
