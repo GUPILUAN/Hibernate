@@ -25,7 +25,8 @@ public class UserServices {
         }else{
             System.out.println("Ya se encuentra el usuario en la base de datos");
         }
-        return user;
+        
+        return user.getId() > 0 ? user : null;
     }
 
     public Usuario obtenerUsuario(int id){
