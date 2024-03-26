@@ -57,7 +57,11 @@ public class Usuario {
 
 	@Override
 	public String toString(){
-		return this != null ? String.format("[USUARIO %d nombre: %s email: %s ] ", id,nombre,email) : "No existe el usuario";
+		String s = "";
+		for(int i = 0; i < password.length(); i++){
+			s += "*";
+		}
+		return this != null ? String.format("[USUARIO %d nombre: %s, email: %s, password: %s] ", id,nombre,email,s) : "No existe el usuario";
 	}
 
 	@Override

@@ -14,8 +14,8 @@ public class UserServices {
     }
 
     public Usuario crearUsuario(String nombre, String contrasena, String email){
-        Usuario user = null;
-        if(dao.validarUsuario(nombre, email) == null){
+        Usuario user = dao.validarUsuario(nombre, email);
+        if(user == null){
             user = new Usuario();
             user.setNombre(nombre);
             user.setPassword(!contrasena.isBlank() ? contrasena : nombre.substring(0, 3) + email.substring(0, 3));
